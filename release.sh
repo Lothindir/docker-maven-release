@@ -1,14 +1,16 @@
 #!/usr/bin/env bash
 set -e
 
-
-# avoid the release loop by checking if the latest commit is a release commit
-readonly local last_release_commit_hash=$(git log --author="$GIT_RELEASE_BOT_NAME" --pretty=format:"%H" -1)
-echo "Last $GIT_RELEASE_BOT_NAME commit: ${last_release_commit_hash}"
-echo "Current commit: ${CI_COMMIT_SHA}"
-if [[ "${last_release_commit_hash}" = "${CI_COMMIT_SHA}" ]]; then
-     echo "Skipping for $GIT_RELEASE_BOT_NAME commit"
-     exit 0
+echo "SKIP_BOT_RELEASE_CHECK='${SKIP_BOT_RELEASE_CHECK}'"
+if [[ "$SKIP_BOT_RELEASE_CHECK" == "false" ]]; then
+   # avoid the release loop by checking if the latest commit is a release commit
+   readonly local last_release_commit_hash=$(git log --author="$GIT_RELEASE_BOT_NAME" --pretty=format:"%H" -1)
+   echo "Last $GIT_RELEASE_BOT_NAME commit: ${last_release_commit_hash}"
+   echo "Current commit: ${CI_COMMIT_SHA}"
+   if [[ "${last_release_commit_hash}" = "${CI_COMMIT_SHA}" ]]; then
+      echo "Skipping for $GIT_RELEASE_BOT_NAME commit"
+      exit 0
+   fi
 fi
 
 if [ -d "${M2_HOME_FOLDER}" ]; then

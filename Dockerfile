@@ -1,12 +1,9 @@
-FROM alpine:3
+FROM ubuntu:latest
 
-RUN apk --update --no-cache add bash maven git openssh gnupg libxml2-utils vim openjdk8 jq
-RUN apk --no-cache add openjdk11 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
-RUN apk --update add openjdk14 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk --update add openjdk15 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk --update add openjdk16 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk --update add openjdk17 --repository=http://dl-cdn.alpinelinux.org/alpine/edge/testing
-RUN apk add bash gettext
+RUN apt-get update
+RUN apt-get install -y bash maven git openssh-client gnupg libxml2-utils vim
+RUN apt-get install -y openjdk-11-jdk
+RUN apt-get install -y jq
 
 COPY ./add-ssh-key.sh /usr/local/bin
 COPY ./setup-maven-servers.sh /usr/local/bin
